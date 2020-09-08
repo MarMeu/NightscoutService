@@ -1,9 +1,9 @@
 //
-//  NightscoutServiceTableViewController.swift
+//  NightscoutServiceCredentialsTableViewController.swift
 //  NightscoutServiceKitUI
 //
-//  Created by Darin Krauss on 6/20/19.
-//  Copyright © 2019 LoopKit Authors. All rights reserved.
+//  Created by Pete Schwamb on 9/7/20.
+//  Copyright © 2020 LoopKit Authors. All rights reserved.
 //
 
 import UIKit
@@ -11,7 +11,7 @@ import LoopKit
 import LoopKitUI
 import NightscoutServiceKit
 
-final class NightscoutServiceTableViewController: UITableViewController, UITextFieldDelegate {
+final class NightscoutServiceCredentialsTableViewController: UITableViewController, UITextFieldDelegate {
 
     public enum Operation {
         case create
@@ -260,8 +260,6 @@ fileprivate extension URL {
 extension AuthenticationTableViewCell: IdentifiableClass {}
 
 extension AuthenticationTableViewCell: NibLoadable {}
-
-extension TextButtonTableViewCell: IdentifiableClass {}
 
 fileprivate extension UIAlertController {
 

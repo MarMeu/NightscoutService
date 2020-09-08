@@ -93,7 +93,7 @@ public final class NightscoutService: Service {
         try? KeychainManager().setNightscoutCredentials(siteURL: siteURL, apiSecret: apiSecret)
     }
 
-    private func restoreCredentials() {
+    public func restoreCredentials() {
         if let credentials = try? KeychainManager().getNightscoutCredentials() {
             self.siteURL = credentials.siteURL
             self.apiSecret = credentials.apiSecret
@@ -102,6 +102,10 @@ public final class NightscoutService: Service {
 
     private func clearCredentials() {
         try? KeychainManager().setNightscoutCredentials()
+    }
+    
+    public func saveSettings(settings: TherapySettings) {
+        serviceDelegate?.serviceHasNewTherapySettings(settings)
     }
 
 }

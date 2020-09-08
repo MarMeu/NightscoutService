@@ -14,15 +14,16 @@ import NightscoutServiceKit
 extension NightscoutService: ServiceUI {
     
     public static var image: UIImage? {
-        UIImage(named: "nightscout", in: Bundle(for: NightscoutServiceTableViewController.self), compatibleWith: nil)!
+        UIImage(named: "nightscout", in: Bundle(for: NightscoutServiceCredentialsTableViewController.self), compatibleWith: nil)!
     }
 
-    public static func setupViewController() -> (UIViewController & ServiceSetupNotifying & CompletionNotifying)? {
-        return ServiceViewController(rootViewController: NightscoutServiceTableViewController(service: NightscoutService(), for: .create))
+    public static func setupViewController(chartColors: ChartColorPalette, carbTintColor: Color, glucoseTintColor: Color, guidanceColors: GuidanceColors, insulinTintColor: Color) -> (UIViewController & ServiceSetupNotifying & CompletionNotifying)? {
+        
+        return SettingsReviewUICoordinator(chartColors: chartColors, carbTintColor: carbTintColor, glucoseTintColor: glucoseTintColor, guidanceColors: guidanceColors, insulinTintColor: insulinTintColor)
     }
 
     public func settingsViewController(chartColors: ChartColorPalette, carbTintColor: Color, glucoseTintColor: Color, guidanceColors: GuidanceColors, insulinTintColor: Color) -> (UIViewController & ServiceSettingsNotifying & CompletionNotifying) {
-      return ServiceViewController(rootViewController: NightscoutServiceTableViewController(service: self, for: .update))
+      return ServiceViewController(rootViewController: NightscoutServiceCredentialsTableViewController(service: self, for: .update))
     }
 
 }
