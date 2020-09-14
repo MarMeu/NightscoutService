@@ -57,6 +57,7 @@
 		C1E7038E2507131400DAB534 /* CredentialsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1E7038D2507131400DAB534 /* CredentialsViewModel.swift */; };
 		C1E703932507193400DAB534 /* Image.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1E703922507193400DAB534 /* Image.swift */; };
 		C1E70395250725AA00DAB534 /* KeyboardObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1E70394250725AA00DAB534 /* KeyboardObserver.swift */; };
+		C1EFF674250B93510096A558 /* OnboardingChooser.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1EFF673250B93510096A558 /* OnboardingChooser.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -163,6 +164,7 @@
 		C1E7038D2507131400DAB534 /* CredentialsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CredentialsViewModel.swift; sourceTree = "<group>"; };
 		C1E703922507193400DAB534 /* Image.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Image.swift; sourceTree = "<group>"; };
 		C1E70394250725AA00DAB534 /* KeyboardObserver.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeyboardObserver.swift; sourceTree = "<group>"; };
+		C1EFF673250B93510096A558 /* OnboardingChooser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingChooser.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -358,6 +360,7 @@
 			isa = PBXGroup;
 			children = (
 				C1E7038B2507117900DAB534 /* CredentialsView.swift */,
+				C1EFF673250B93510096A558 /* OnboardingChooser.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -714,6 +717,7 @@
 			files = (
 				A9E4153822BC89B600168E14 /* IdentifiableClass.swift in Sources */,
 				C1E7036825070CA600DAB534 /* NightscoutServiceSettingsViewController.swift in Sources */,
+				C1EFF674250B93510096A558 /* OnboardingChooser.swift in Sources */,
 				A9E4153622BC89A300168E14 /* NibLoadable.swift in Sources */,
 				C1E7036C25070D3200DAB534 /* SettingsReviewUICoordinator.swift in Sources */,
 				C1E7038A25070DFA00DAB534 /* SettingsReviewViewModel.swift in Sources */,

@@ -152,6 +152,7 @@ class SettingsReviewUICoordinator: UINavigationController, CompletionNotifying, 
                 self.stepFinished()
             }
             model.didSucceed = {
+                self.serviceSetupDelegate?.serviceSetupNotifying(self, didCreateService: service)
                 self.stepFinished()
             }
             let view = CredentialsView(viewModel: model, url: service.siteURL?.absoluteString ?? "", apiSecret: service.apiSecret ?? "")
