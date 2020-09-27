@@ -11,20 +11,11 @@ import SwiftUI
 import LoopKitUI
 import LoopKit
 import NightscoutServiceKit
-
-struct MockPrescription: Prescription {
-    var datePrescribed: Date
-    var providerName: String
-    
-    init(datePrescribed: Date, providerName: String) {
-        self.datePrescribed = datePrescribed
-        self.providerName = providerName
-    }
-}
+import HealthKit
 
 enum SettingsReviewScreen {
+    case setupChooser
     case login
-    case prescriptionTherapySettingsOverview
     case correctionRangeInfo
     case correctionRangeEditor
     case correctionRangePreMealOverrideInfo
@@ -47,9 +38,9 @@ enum SettingsReviewScreen {
     
     func next() -> SettingsReviewScreen? {
         switch self {
+        case .setupChooser:
+            return nil
         case .login:
-            return .suspendThresholdInfo
-        case .prescriptionTherapySettingsOverview:
             return .suspendThresholdInfo
         case .suspendThresholdInfo:
             return .suspendThresholdEditor
@@ -98,6 +89,8 @@ class SettingsReviewUICoordinator: UINavigationController, CompletionNotifying, 
     weak var completionDelegate: CompletionDelegate?
     var onReviewFinished: ((TherapySettings) -> Void)?
     
+    private let initialTherapySettings: TherapySettings
+    private let preferredGlucoseUnit: HKUnit
     private let chartColors: ChartColorPalette
     private let carbTintColor: Color
     private let glucoseTintColor: Color
@@ -107,6 +100,7 @@ class SettingsReviewUICoordinator: UINavigationController, CompletionNotifying, 
     public weak var serviceSetupDelegate: ServiceSetupDelegate?
 
     public weak var serviceSettingsDelegate: ServiceSettingsDelegate?
+    
 
     public func notifyServiceCreated(_ service: Service) {
         serviceSetupDelegate?.serviceSetupNotifying(self, didCreateService: service)
@@ -123,7 +117,9 @@ class SettingsReviewUICoordinator: UINavigationController, CompletionNotifying, 
         return screenStack.last!
     }
 
-    init(chartColors: ChartColorPalette, carbTintColor: Color, glucoseTintColor: Color, guidanceColors: GuidanceColors, insulinTintColor: Color) {
+    init(therapySettings: TherapySettings, preferredGlucoseUnit: HKUnit, chartColors: ChartColorPalette, carbTintColor: Color, glucoseTintColor: Color, guidanceColors: GuidanceColors, insulinTintColor: Color) {
+        self.initialTherapySettings = therapySettings
+        self.preferredGlucoseUnit = preferredGlucoseUnit
         self.chartColors = chartColors
         self.carbTintColor = carbTintColor
         self.glucoseTintColor = glucoseTintColor
@@ -144,6 +140,16 @@ class SettingsReviewUICoordinator: UINavigationController, CompletionNotifying, 
         
     private func viewControllerForScreen(_ screen: SettingsReviewScreen) -> UIViewController {
         switch screen {
+        case .setupChooser:
+            let view = OnboardingChooser {
+                self.navigate(to: .login)
+            } setupWithoutNightscout: {
+                self.navigate(to: .suspendThresholdInfo)
+            }
+
+            let hostedView = hostingController(rootView: view)
+            return hostedView
+
         case .login:
             let service = NightscoutService()
             service.restoreCredentials()
@@ -157,17 +163,6 @@ class SettingsReviewUICoordinator: UINavigationController, CompletionNotifying, 
             }
             let view = CredentialsView(viewModel: model, url: service.siteURL?.absoluteString ?? "", apiSecret: service.apiSecret ?? "")
             let hostedView = hostingController(rootView: view)
-            return hostedView
-        case .prescriptionTherapySettingsOverview:
-            let nextButtonString = LocalizedString("Continue", comment: "Therapy settings overview next button title")
-            let actionButton = TherapySettingsView.ActionButton(localizedString: nextButtonString) { [weak self] in
-                self?.stepFinished()
-            }
-            // The initial overview screen should _always_ show the prescription.
-            let originalTherapySettingsViewModel = constructTherapySettingsViewModel()
-            let view = TherapySettingsView(viewModel: originalTherapySettingsViewModel!, actionButton: actionButton)
-            let hostedView = hostingController(rootView: view)
-            hostedView.title = LocalizedString("Therapy Settings", comment: "Navigation view title")
             return hostedView
         case .correctionRangeInfo:
             let onExit: (() -> Void) = { [weak self] in
@@ -212,6 +207,7 @@ class SettingsReviewUICoordinator: UINavigationController, CompletionNotifying, 
             hostedView.navigationItem.largeTitleDisplayMode = .never // TODO: hack to fix jumping, will be removed once editors have titles
             return hostedView
         case .suspendThresholdInfo:
+            therapySettingsViewModel = constructTherapySettingsViewModel(therapySettings: initialTherapySettings)
             let exiting: (() -> Void) = { [weak self] in
                 self?.stepFinished()
             }
@@ -316,33 +312,31 @@ class SettingsReviewUICoordinator: UINavigationController, CompletionNotifying, 
         return DismissibleHostingController(rootView: rootView, carbTintColor: carbTintColor, glucoseTintColor: glucoseTintColor, guidanceColors: guidanceColors, insulinTintColor: insulinTintColor)
     }
     
-    private func constructTherapySettingsViewModel() -> TherapySettingsViewModel? {
-        var supportedBasalRates = (1...600).map { round(Double($0) / Double(1/0.05) * 100) / 100 }
+    private func constructTherapySettingsViewModel(therapySettings: TherapySettings) -> TherapySettingsViewModel? {
+        let supportedBasalRates = (1...600).map { round(Double($0) / Double(1/0.05) * 100) / 100 }
         
-        var maximumBasalScheduleEntryCount = 24
+        let maximumBasalScheduleEntryCount = 24
         
-        var supportedBolusVolumes = (1...600).map { Double($0) / Double(1/0.05) }
+        let supportedBolusVolumes = (1...600).map { Double($0) / Double(1/0.05) }
         
         let pumpSupportedIncrements = PumpSupportedIncrements(
             basalRates: supportedBasalRates,
             bolusVolumes: supportedBolusVolumes,
             maximumBasalScheduleEntryCount: maximumBasalScheduleEntryCount
         )
-        let supportedInsulinModelSettings = SupportedInsulinModelSettings(fiaspModelEnabled: false, walshModelEnabled: false)
-        
-        let prescription = MockPrescription(datePrescribed: Date(), providerName: "Some Doctor")
-        let therapySettings = TherapySettings()
+        let supportedInsulinModelSettings = SupportedInsulinModelSettings(fiaspModelEnabled: true, walshModelEnabled: false)
         
         return TherapySettingsViewModel(
             mode: .acceptanceFlow,
             therapySettings: therapySettings,
+            glucoseUnit: preferredGlucoseUnit,
             supportedInsulinModelSettings: supportedInsulinModelSettings,
             pumpSupportedIncrements: pumpSupportedIncrements,
             syncPumpSchedule: { _, _ in
                 // Since pump isn't set up, this syncing shouldn't do anything
                 assertionFailure()
             },
-            prescription: prescription,
+            prescription: nil,
             chartColors: chartColors
         ) { [weak self] _, _ in
             self?.stepFinished()
@@ -360,7 +354,7 @@ class SettingsReviewUICoordinator: UINavigationController, CompletionNotifying, 
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        screenStack = [.login]
+        screenStack = [.setupChooser]
         let viewController = viewControllerForScreen(currentScreen)
         setViewControllers([viewController], animated: false)
     }

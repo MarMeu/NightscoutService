@@ -7,15 +7,44 @@
 //
 
 import SwiftUI
+import LoopKitUI
 
-struct OnboardingChooser: View {
+
+struct OnboardingChooser: View, HorizontalSizeClassOverride {
+    
+    var setupWithNightscout: (() -> Void)?
+    var setupWithoutNightscout: (() -> Void)?
+    
     var body: some View {
-        Text("")
+        VStack(alignment: .center, spacing: 20) {
+            Text("Before using Loop you need to configure it. If you already use Nightscout, Loop can use it as a place to read and store your configuration. But if not, no worries. Nightscout use is completely optional with Loop, and you can always set it up later.")
+                .foregroundColor(.secondary)
+            Spacer()
+            Button(action: {
+                self.setupWithNightscout?()
+            }) {
+                Text(LocalizedString("I have Nightscout", comment:"Button title for choosing onboarding with nightscout"))
+                    .actionButtonStyle(.secondary)
+            }
+            Button(action: {
+                self.setupWithoutNightscout?()
+            }) {
+                Text(LocalizedString("Setup Loop without Nightscout", comment:"Button title for choosing onboarding without nightscout"))
+                    .actionButtonStyle(.secondary)
+            }
+        }
+        .padding()
+        .environment(\.horizontalSizeClass, .compact)
+        .navigationBarTitle(Text("Welcome"))
+
     }
 }
 
 struct OnboardingChooser_Previews: PreviewProvider {
     static var previews: some View {
-        OnboardingChooser()
+        NavigationView {
+            OnboardingChooser()
+        }
+        .previewDevice("iPod touch (7th generation)")
     }
 }
