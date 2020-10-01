@@ -36,7 +36,7 @@ public final class NightscoutService: Service {
     }
     private let lockedObjectIdCache: Locked<ObjectIdCache>
 
-    private lazy var uploader: NightscoutUploader! = {
+    private lazy var uploader: NightscoutUploader? = {
         guard let siteURL = siteURL, let apiSecret = apiSecret else {
             return nil
         }
@@ -115,7 +115,12 @@ extension NightscoutService: RemoteDataService {
     public var carbDataLimit: Int? { return 1000 }
 
     public func uploadCarbData(created: [SyncCarbObject], updated: [SyncCarbObject], deleted: [SyncCarbObject], completion: @escaping (Result<Bool, Error>) -> Void) {
-        self.uploader.createCarbData(created) { result in
+        guard let uploader = uploader else {
+            completion(.success(true))
+            return
+        }
+        
+        uploader.createCarbData(created) { result in
             switch result {
             case .failure(let error):
                 completion(.failure(error))
@@ -129,12 +134,12 @@ extension NightscoutService: RemoteDataService {
                 }
                 self.serviceDelegate?.serviceDidUpdateState(self)
                 
-                self.uploader.updateCarbData(updated, usingObjectIdCache: self.objectIdCache) { result in
+                uploader.updateCarbData(updated, usingObjectIdCache: self.objectIdCache) { result in
                     switch result {
                     case .failure(let error):
                         completion(.failure(error))
                     case .success(let updatedUploaded):
-                        self.uploader.deleteCarbData(deleted, usingObjectIdCache: self.objectIdCache) { result in
+                        uploader.deleteCarbData(deleted, usingObjectIdCache: self.objectIdCache) { result in
                             switch result {
                             case .failure(let error):
                                 completion(.failure(error))
@@ -153,6 +158,11 @@ extension NightscoutService: RemoteDataService {
     public var doseDataLimit: Int? { return 1000 }
 
     public func uploadDoseData(_ stored: [DoseEntry], completion: @escaping (Result<Bool, Error>) -> Void) {
+        guard let uploader = uploader else {
+            completion(.success(true))
+            return
+        }
+
         uploader.uploadDoses(stored, usingObjectIdCache: self.objectIdCache) { (result) in
             switch (result) {
             case .success(let objectIds):
@@ -172,12 +182,22 @@ extension NightscoutService: RemoteDataService {
     public var dosingDecisionDataLimit: Int? { return 1000 }
 
     public func uploadDosingDecisionData(_ stored: [StoredDosingDecision], completion: @escaping (Result<Bool, Error>) -> Void) {
+        guard let uploader = uploader else {
+            completion(.success(true))
+            return
+        }
+
         uploader.uploadDeviceStatuses(stored.map { $0.deviceStatus }, completion: completion)
     }
 
     public var glucoseDataLimit: Int? { return 1000 }
 
     public func uploadGlucoseData(_ stored: [StoredGlucoseSample], completion: @escaping (Result<Bool, Error>) -> Void) {
+        guard let uploader = uploader else {
+            completion(.success(true))
+            return
+        }
+
         uploader.uploadGlucoseSamples(stored, completion: completion)
     }
 
@@ -190,6 +210,11 @@ extension NightscoutService: RemoteDataService {
     public var settingsDataLimit: Int? { return 1000 }
 
     public func uploadSettingsData(_ stored: [StoredSettings], completion: @escaping (Result<Bool, Error>) -> Void) {
+        guard let uploader = uploader else {
+            completion(.success(true))
+            return
+        }
+
         uploader.uploadProfiles(stored.compactMap { $0.profileSet }, completion: completion)
     }
 

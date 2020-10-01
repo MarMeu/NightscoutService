@@ -97,10 +97,11 @@ class SettingsReviewUICoordinator: UINavigationController, CompletionNotifying, 
     private let guidanceColors: GuidanceColors
     private let insulinTintColor: Color
     
+    private var service: NightscoutService?
+    
     public weak var serviceSetupDelegate: ServiceSetupDelegate?
 
     public weak var serviceSettingsDelegate: ServiceSettingsDelegate?
-    
 
     public func notifyServiceCreated(_ service: Service) {
         serviceSetupDelegate?.serviceSetupNotifying(self, didCreateService: service)
@@ -152,12 +153,14 @@ class SettingsReviewUICoordinator: UINavigationController, CompletionNotifying, 
 
         case .login:
             let service = NightscoutService()
+            self.service = service
             service.restoreCredentials()
             let model = CredentialsViewModel(service: service)
             model.didSkip = {
                 self.stepFinished()
             }
             model.didSucceed = {
+                self.notifyServiceCreated(service)
                 self.serviceSetupDelegate?.serviceSetupNotifying(self, didCreateService: service)
                 self.stepFinished()
             }
@@ -294,11 +297,19 @@ class SettingsReviewUICoordinator: UINavigationController, CompletionNotifying, 
             hostedView.navigationItem.largeTitleDisplayMode = .never // TODO: hack to fix jumping, will be removed once editors have titles
             return hostedView
         case .therapySettingsRecap:
-            // Get rid of the "prescription" card because it should not be shown as part of the recap
             therapySettingsViewModel?.prescription = nil
             let nextButtonString = LocalizedString("Save Settings", comment: "Therapy settings save button title")
             let actionButton = TherapySettingsView.ActionButton(localizedString: nextButtonString) { [weak self] in
-                self?.stepFinished()
+                if let self = self {
+                    if self.service == nil {
+                        self.service = NightscoutService()
+                        self.notifyServiceCreated(self.service!)
+                    }
+                    if let therapySettings = self.therapySettingsViewModel?.therapySettings {
+                        self.service?.serviceDelegate?.serviceHasNewTherapySettings(therapySettings)
+                    }
+                    self.stepFinished()
+                }
             }
             let view = TherapySettingsView(viewModel: therapySettingsViewModel!, actionButton: actionButton)
             let hostedView = hostingController(rootView: view)
