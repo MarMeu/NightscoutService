@@ -342,10 +342,12 @@ class SettingsReviewUICoordinator: UINavigationController, CompletionNotifying, 
             therapySettings: therapySettings,
             glucoseUnit: preferredGlucoseUnit,
             supportedInsulinModelSettings: supportedInsulinModelSettings,
-            pumpSupportedIncrements: pumpSupportedIncrements,
-            syncPumpSchedule: { _, _ in
-                // Since pump isn't set up, this syncing shouldn't do anything
-                assertionFailure()
+            pumpSupportedIncrements: { pumpSupportedIncrements },
+            syncPumpSchedule: {
+                { _, _ in
+                    // Since pump isn't set up, this syncing shouldn't do anything
+                    assertionFailure()
+                }
             },
             prescription: nil,
             chartColors: chartColors
