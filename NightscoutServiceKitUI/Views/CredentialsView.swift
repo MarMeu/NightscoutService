@@ -16,7 +16,7 @@ struct CredentialsView: View, HorizontalSizeClassOverride {
     
     @State var url: String
     @State var apiSecret: String
-
+    
     var body: some View {
         VStack {
             Text("Nightscout Login")
@@ -51,11 +51,10 @@ struct CredentialsView: View, HorizontalSizeClassOverride {
             }
             .buttonStyle(ActionButtonStyle(.primary))
             .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
-            Button(action: { self.viewModel.didSkip?() } ) {
-                Text("Skip").padding(.top, 20)
-            }
             
-
+            Button(action: { self.viewModel.didCancel?() } ) {
+                Text("Cancel").padding(.top, 20)
+            }
         }
         .padding([.leading, .trailing])
         .offset(y: -keyboardObserver.height*0.4)

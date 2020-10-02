@@ -1,5 +1,5 @@
 //
-//  SettingsReviewUICoordinator.swift
+//  ServiceUICoordinator.swift
 //  NightscoutServiceKitUI
 //
 //  Created by Pete Schwamb on 9/7/20.
@@ -13,9 +13,10 @@ import LoopKit
 import NightscoutServiceKit
 import HealthKit
 
-enum SettingsReviewScreen {
+enum ServiceScreen {
     case setupChooser
     case login
+    case status
     case correctionRangeInfo
     case correctionRangeEditor
     case correctionRangePreMealOverrideInfo
@@ -36,12 +37,14 @@ enum SettingsReviewScreen {
     case insulinSensitivityEditor
     case therapySettingsRecap
     
-    func next() -> SettingsReviewScreen? {
+    func next() -> ServiceScreen? {
         switch self {
         case .setupChooser:
             return nil
         case .login:
             return .suspendThresholdInfo
+        case .status:
+            return nil
         case .suspendThresholdInfo:
             return .suspendThresholdEditor
         case .suspendThresholdEditor:
@@ -84,8 +87,8 @@ enum SettingsReviewScreen {
     }
 }
 
-class SettingsReviewUICoordinator: UINavigationController, CompletionNotifying, UINavigationControllerDelegate, ServiceSetupNotifying, ServiceSettingsNotifying {
-    var screenStack = [SettingsReviewScreen]()
+class ServiceUICoordinator: UINavigationController, CompletionNotifying, UINavigationControllerDelegate, ServiceSetupNotifying, ServiceSettingsNotifying {
+    var screenStack = [ServiceScreen]()
     weak var completionDelegate: CompletionDelegate?
     var onReviewFinished: ((TherapySettings) -> Void)?
     
@@ -114,11 +117,11 @@ class SettingsReviewUICoordinator: UINavigationController, CompletionNotifying, 
     let prescriptionViewModel = SettingsReviewViewModel() // Used for retreving & keeping track of prescription
     private var therapySettingsViewModel: TherapySettingsViewModel? // Used for keeping track of & updating settings
     
-    var currentScreen: SettingsReviewScreen {
+    var currentScreen: ServiceScreen {
         return screenStack.last!
     }
 
-    init(therapySettings: TherapySettings, preferredGlucoseUnit: HKUnit, chartColors: ChartColorPalette, carbTintColor: Color, glucoseTintColor: Color, guidanceColors: GuidanceColors, insulinTintColor: Color) {
+    init(service: NightscoutService?, therapySettings: TherapySettings, preferredGlucoseUnit: HKUnit, chartColors: ChartColorPalette, carbTintColor: Color, glucoseTintColor: Color, guidanceColors: GuidanceColors, insulinTintColor: Color) {
         self.initialTherapySettings = therapySettings
         self.preferredGlucoseUnit = preferredGlucoseUnit
         self.chartColors = chartColors
@@ -126,6 +129,7 @@ class SettingsReviewUICoordinator: UINavigationController, CompletionNotifying, 
         self.glucoseTintColor = glucoseTintColor
         self.guidanceColors = guidanceColors
         self.insulinTintColor = insulinTintColor
+        self.service = service
         super.init(navigationBarClass: UINavigationBar.self, toolbarClass: UIToolbar.self)
     }
     
@@ -139,10 +143,10 @@ class SettingsReviewUICoordinator: UINavigationController, CompletionNotifying, 
         fatalError("init(coder:) has not been implemented")
     }
         
-    private func viewControllerForScreen(_ screen: SettingsReviewScreen) -> UIViewController {
+    private func viewControllerForScreen(_ screen: ServiceScreen) -> UIViewController {
         switch screen {
         case .setupChooser:
-            let view = OnboardingChooser {
+            let view = OnboardingChooserView {
                 self.navigate(to: .login)
             } setupWithoutNightscout: {
                 self.navigate(to: .suspendThresholdInfo)
@@ -152,19 +156,35 @@ class SettingsReviewUICoordinator: UINavigationController, CompletionNotifying, 
             return hostedView
 
         case .login:
-            let service = NightscoutService()
-            self.service = service
-            service.restoreCredentials()
-            let model = CredentialsViewModel(service: service)
-            model.didSkip = {
-                self.stepFinished()
+            var creatingService: Bool
+            if service == nil {
+                service = NightscoutService()
+                creatingService = true
+            } else {
+                creatingService = false
+                service!.restoreCredentials()
+            }
+            let model = CredentialsViewModel(service: service!)
+            model.didCancel = {
+                self.completionDelegate?.completionNotifyingDidComplete(self)
             }
             model.didSucceed = {
-                self.notifyServiceCreated(service)
-                self.serviceSetupDelegate?.serviceSetupNotifying(self, didCreateService: service)
+                if creatingService {
+                    self.notifyServiceCreated(self.service!)
+                    self.serviceSetupDelegate?.serviceSetupNotifying(self, didCreateService: self.service!)
+                }
                 self.stepFinished()
             }
-            let view = CredentialsView(viewModel: model, url: service.siteURL?.absoluteString ?? "", apiSecret: service.apiSecret ?? "")
+            let view = CredentialsView(viewModel: model, url: service!.siteURL?.absoluteString ?? "", apiSecret: service!.apiSecret ?? "")
+            let hostedView = hostingController(rootView: view)
+            return hostedView
+        case .status:
+            let viewModel = ServiceStatusViewModel(delegate: service!)
+            viewModel.didLogout = {
+                self.service?.clearCredentials()
+                self.stepFinished()
+            }
+            let view = ServiceStatusView(viewModel: viewModel)
             let hostedView = hostingController(rootView: view)
             return hostedView
         case .correctionRangeInfo:
@@ -367,7 +387,15 @@ class SettingsReviewUICoordinator: UINavigationController, CompletionNotifying, 
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        screenStack = [.setupChooser]
+        if let service = service {
+            if service.hasConfiguration {
+                screenStack = [.status]
+            } else {
+                screenStack = [.login]
+            }
+        } else {
+            screenStack = [.setupChooser]
+        }
         let viewController = viewControllerForScreen(currentScreen)
         setViewControllers([viewController], animated: false)
     }
@@ -386,7 +414,7 @@ class SettingsReviewUICoordinator: UINavigationController, CompletionNotifying, 
         }
     }
     
-    func navigate(to screen: SettingsReviewScreen) {
+    func navigate(to screen: ServiceScreen) {
         screenStack.append(screen)
         let viewController = viewControllerForScreen(screen)
         self.pushViewController(viewController, animated: true)

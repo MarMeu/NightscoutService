@@ -21,7 +21,7 @@ class CredentialsViewModel: ObservableObject {
     var service: NightscoutService
     
     var didSucceed: (() -> Void)?
-    var didSkip: (() -> Void)?
+    var didCancel: (() -> Void)?
 
     init(service: NightscoutService) {
         self.service = service

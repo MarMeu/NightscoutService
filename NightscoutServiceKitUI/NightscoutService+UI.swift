@@ -20,11 +20,11 @@ extension NightscoutService: ServiceUI {
 
     public static func setupViewController(currentTherapySettings: TherapySettings, preferredGlucoseUnit: HKUnit, chartColors: ChartColorPalette, carbTintColor: Color, glucoseTintColor: Color, guidanceColors: GuidanceColors, insulinTintColor: Color) -> (UIViewController & ServiceSetupNotifying & CompletionNotifying)? {
         
-        return SettingsReviewUICoordinator(therapySettings: currentTherapySettings, preferredGlucoseUnit: preferredGlucoseUnit, chartColors: chartColors, carbTintColor: carbTintColor, glucoseTintColor: glucoseTintColor, guidanceColors: guidanceColors, insulinTintColor: insulinTintColor)
+        return ServiceUICoordinator(service: nil, therapySettings: currentTherapySettings, preferredGlucoseUnit: preferredGlucoseUnit, chartColors: chartColors, carbTintColor: carbTintColor, glucoseTintColor: glucoseTintColor, guidanceColors: guidanceColors, insulinTintColor: insulinTintColor)
     }
 
-    public func settingsViewController(chartColors: ChartColorPalette, carbTintColor: Color, glucoseTintColor: Color, guidanceColors: GuidanceColors, insulinTintColor: Color) -> (UIViewController & ServiceSettingsNotifying & CompletionNotifying) {
-      return ServiceViewController(rootViewController: NightscoutServiceCredentialsTableViewController(service: self, for: .update))
+    public func settingsViewController(currentTherapySettings: TherapySettings, preferredGlucoseUnit: HKUnit, chartColors: ChartColorPalette, carbTintColor: Color, glucoseTintColor: Color, guidanceColors: GuidanceColors, insulinTintColor: Color) -> (UIViewController & ServiceSettingsNotifying & CompletionNotifying) {
+        return ServiceUICoordinator(service: self, therapySettings: currentTherapySettings, preferredGlucoseUnit: preferredGlucoseUnit, chartColors: chartColors, carbTintColor: carbTintColor, glucoseTintColor: glucoseTintColor, guidanceColors: guidanceColors, insulinTintColor: insulinTintColor)
     }
 
 }

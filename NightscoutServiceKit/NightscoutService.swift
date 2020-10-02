@@ -100,7 +100,9 @@ public final class NightscoutService: Service {
         }
     }
 
-    private func clearCredentials() {
+    public func clearCredentials() {
+        siteURL = nil
+        apiSecret = nil
         try? KeychainManager().setNightscoutCredentials()
     }
     

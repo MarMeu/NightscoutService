@@ -1,5 +1,5 @@
 //
-//  OnboardingChooser.swift
+//  OnboardingChooserView.swift
 //  NightscoutServiceKitUI
 //
 //  Created by Pete Schwamb on 9/11/20.
@@ -10,7 +10,7 @@ import SwiftUI
 import LoopKitUI
 
 
-struct OnboardingChooser: View, HorizontalSizeClassOverride {
+struct OnboardingChooserView: View, HorizontalSizeClassOverride {
     
     var setupWithNightscout: (() -> Void)?
     var setupWithoutNightscout: (() -> Void)?
@@ -40,10 +40,10 @@ struct OnboardingChooser: View, HorizontalSizeClassOverride {
     }
 }
 
-struct OnboardingChooser_Previews: PreviewProvider {
+struct OnboardingChooserView_Previews: PreviewProvider {
     static var previews: some View {
         NavigationView {
-            OnboardingChooser()
+            OnboardingChooserView()
         }
         .previewDevice("iPod touch (7th generation)")
     }
