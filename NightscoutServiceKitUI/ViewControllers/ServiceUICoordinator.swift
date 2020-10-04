@@ -393,6 +393,8 @@ class ServiceUICoordinator: UINavigationController, CompletionNotifying, UINavig
             } else {
                 screenStack = [.login]
             }
+        } else if initialTherapySettings.isComplete {
+            screenStack = [.login]
         } else {
             screenStack = [.setupChooser]
         }
