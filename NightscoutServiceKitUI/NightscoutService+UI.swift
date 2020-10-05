@@ -15,7 +15,7 @@ import HealthKit
 extension NightscoutService: ServiceUI {
     
     public static var image: UIImage? {
-        UIImage(named: "nightscout", in: Bundle(for: NightscoutServiceCredentialsTableViewController.self), compatibleWith: nil)!
+        UIImage(named: "nightscout", in: Bundle(for: ServiceUICoordinator.self), compatibleWith: nil)!
     }
 
     public static func setupViewController(currentTherapySettings: TherapySettings, preferredGlucoseUnit: HKUnit, chartColors: ChartColorPalette, carbTintColor: Color, glucoseTintColor: Color, guidanceColors: GuidanceColors, insulinTintColor: Color) -> (UIViewController & ServiceSetupNotifying & CompletionNotifying)? {

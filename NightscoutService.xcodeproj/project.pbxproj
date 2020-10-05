@@ -31,7 +31,6 @@
 		A94DA7642353CF930082E26D /* StoredGlucoseSample.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94DA7632353CF930082E26D /* StoredGlucoseSample.swift */; };
 		A993990322BC7095005E39D3 /* NightscoutService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A993990222BC7095005E39D3 /* NightscoutService.swift */; };
 		A993990522BC70B7005E39D3 /* NightscoutService+UI.swift in Sources */ = {isa = PBXBuildFile; fileRef = A993990422BC70B7005E39D3 /* NightscoutService+UI.swift */; };
-		A993990722BC70C9005E39D3 /* NightscoutServiceCredentialsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A993990622BC70C9005E39D3 /* NightscoutServiceCredentialsTableViewController.swift */; };
 		A993990922BC72B4005E39D3 /* NightscoutUploadKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A993990822BC72B4005E39D3 /* NightscoutUploadKit.framework */; platformFilter = ios; };
 		A993990A22BC72CF005E39D3 /* NightscoutUploadKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A993990822BC72B4005E39D3 /* NightscoutUploadKit.framework */; };
 		A993990D22BC7307005E39D3 /* NightscoutUploadKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A993990822BC72B4005E39D3 /* NightscoutUploadKit.framework */; };
@@ -50,9 +49,9 @@
 		A9E4153B22BC8A3800168E14 /* UIColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9E4153A22BC8A3800168E14 /* UIColor.swift */; };
 		C102014D2526C1BA003B6FB7 /* ServiceStatusViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C102014C2526C1BA003B6FB7 /* ServiceStatusViewModel.swift */; };
 		C10201552526D3E8003B6FB7 /* NightscoutService+ServiceStatusViewModelDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C10201542526D3E8003B6FB7 /* NightscoutService+ServiceStatusViewModelDelegate.swift */; };
+		C18608B0252AAFA4008215DB /* WelcomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C18608AF252AAFA4008215DB /* WelcomeView.swift */; };
 		C1E703642506BE9400DAB534 /* ObjectIdCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1E703632506BE9400DAB534 /* ObjectIdCache.swift */; };
 		C1E7036625070A0E00DAB534 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C1E7036525070A0E00DAB534 /* Assets.xcassets */; };
-		C1E7036825070CA600DAB534 /* NightscoutServiceSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1E7036725070CA600DAB534 /* NightscoutServiceSettingsViewController.swift */; };
 		C1E7036C25070D3200DAB534 /* ServiceUICoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1E7036B25070D3200DAB534 /* ServiceUICoordinator.swift */; };
 		C1E7038A25070DFA00DAB534 /* SettingsReviewViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1E7038925070DFA00DAB534 /* SettingsReviewViewModel.swift */; };
 		C1E7038C2507117900DAB534 /* CredentialsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1E7038B2507117900DAB534 /* CredentialsView.swift */; };
@@ -127,7 +126,6 @@
 		A94DA7632353CF930082E26D /* StoredGlucoseSample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoredGlucoseSample.swift; sourceTree = "<group>"; };
 		A993990222BC7095005E39D3 /* NightscoutService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NightscoutService.swift; sourceTree = "<group>"; };
 		A993990422BC70B7005E39D3 /* NightscoutService+UI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NightscoutService+UI.swift"; sourceTree = "<group>"; };
-		A993990622BC70C9005E39D3 /* NightscoutServiceCredentialsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NightscoutServiceCredentialsTableViewController.swift; sourceTree = "<group>"; };
 		A993990822BC72B4005E39D3 /* NightscoutUploadKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = NightscoutUploadKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A99C713123396CB100AB9035 /* NightscoutServiceKitPlugin.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = NightscoutServiceKitPlugin.framework; path = NightscoutServiceKitPlugin.loopplugin; sourceTree = BUILT_PRODUCTS_DIR; };
 		A99C713323396CB100AB9035 /* NightscoutServiceKitPlugin.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NightscoutServiceKitPlugin.h; sourceTree = "<group>"; };
@@ -160,9 +158,9 @@
 		A9E4153A22BC8A3800168E14 /* UIColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIColor.swift; sourceTree = "<group>"; };
 		C102014C2526C1BA003B6FB7 /* ServiceStatusViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServiceStatusViewModel.swift; sourceTree = "<group>"; };
 		C10201542526D3E8003B6FB7 /* NightscoutService+ServiceStatusViewModelDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NightscoutService+ServiceStatusViewModelDelegate.swift"; sourceTree = "<group>"; };
+		C18608AF252AAFA4008215DB /* WelcomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeView.swift; sourceTree = "<group>"; };
 		C1E703632506BE9400DAB534 /* ObjectIdCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObjectIdCache.swift; sourceTree = "<group>"; };
 		C1E7036525070A0E00DAB534 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		C1E7036725070CA600DAB534 /* NightscoutServiceSettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NightscoutServiceSettingsViewController.swift; sourceTree = "<group>"; };
 		C1E7036B25070D3200DAB534 /* ServiceUICoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ServiceUICoordinator.swift; sourceTree = "<group>"; };
 		C1E7038925070DFA00DAB534 /* SettingsReviewViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsReviewViewModel.swift; sourceTree = "<group>"; };
 		C1E7038B2507117900DAB534 /* CredentialsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CredentialsView.swift; sourceTree = "<group>"; };
@@ -369,6 +367,7 @@
 				C1E7038B2507117900DAB534 /* CredentialsView.swift */,
 				C1EFF673250B93510096A558 /* OnboardingChooserView.swift */,
 				C1EBB089252596EA000D9680 /* ServiceStatusView.swift */,
+				C18608AF252AAFA4008215DB /* WelcomeView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -377,8 +376,6 @@
 			isa = PBXGroup;
 			children = (
 				C1E7036B25070D3200DAB534 /* ServiceUICoordinator.swift */,
-				C1E7036725070CA600DAB534 /* NightscoutServiceSettingsViewController.swift */,
-				A993990622BC70C9005E39D3 /* NightscoutServiceCredentialsTableViewController.swift */,
 			);
 			path = ViewControllers;
 			sourceTree = "<group>";
@@ -725,7 +722,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				A9E4153822BC89B600168E14 /* IdentifiableClass.swift in Sources */,
-				C1E7036825070CA600DAB534 /* NightscoutServiceSettingsViewController.swift in Sources */,
 				C102014D2526C1BA003B6FB7 /* ServiceStatusViewModel.swift in Sources */,
 				C1EFF674250B93510096A558 /* OnboardingChooserView.swift in Sources */,
 				C1EBB08A252596EA000D9680 /* ServiceStatusView.swift in Sources */,
@@ -739,9 +735,9 @@
 				C1E7038E2507131400DAB534 /* CredentialsViewModel.swift in Sources */,
 				C1E70395250725AA00DAB534 /* KeyboardObserver.swift in Sources */,
 				A9C62DA52331CAE200535612 /* OSLog.swift in Sources */,
-				A993990722BC70C9005E39D3 /* NightscoutServiceCredentialsTableViewController.swift in Sources */,
 				A9E4153B22BC8A3800168E14 /* UIColor.swift in Sources */,
 				C1E7038C2507117900DAB534 /* CredentialsView.swift in Sources */,
+				C18608B0252AAFA4008215DB /* WelcomeView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

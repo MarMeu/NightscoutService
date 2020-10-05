@@ -14,6 +14,7 @@ import NightscoutServiceKit
 import HealthKit
 
 enum ServiceScreen {
+    case welcome
     case setupChooser
     case login
     case status
@@ -39,6 +40,8 @@ enum ServiceScreen {
     
     func next() -> ServiceScreen? {
         switch self {
+        case .welcome:
+            return .setupChooser
         case .setupChooser:
             return nil
         case .login:
@@ -145,6 +148,12 @@ class ServiceUICoordinator: UINavigationController, CompletionNotifying, UINavig
         
     private func viewControllerForScreen(_ screen: ServiceScreen) -> UIViewController {
         switch screen {
+        case .welcome:
+            let view = WelcomeView {
+                self.stepFinished()
+            }
+            let hostedView = hostingController(rootView: view)
+            return hostedView
         case .setupChooser:
             let view = OnboardingChooserView {
                 self.navigate(to: .login)
@@ -175,7 +184,7 @@ class ServiceUICoordinator: UINavigationController, CompletionNotifying, UINavig
                 }
                 self.stepFinished()
             }
-            let view = CredentialsView(viewModel: model, url: service!.siteURL?.absoluteString ?? "", apiSecret: service!.apiSecret ?? "")
+            let view = CredentialsView(viewModel: model, url: service!.siteURL?.absoluteString ?? "", apiSecret: service!.apiSecret ?? "", allowCancel: self.viewControllers.count == 0)
             let hostedView = hostingController(rootView: view)
             return hostedView
         case .status:
@@ -396,7 +405,7 @@ class ServiceUICoordinator: UINavigationController, CompletionNotifying, UINavig
         } else if initialTherapySettings.isComplete {
             screenStack = [.login]
         } else {
-            screenStack = [.setupChooser]
+            screenStack = [.welcome]
         }
         let viewController = viewControllerForScreen(currentScreen)
         setViewControllers([viewController], animated: false)

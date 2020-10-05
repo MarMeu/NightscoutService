@@ -17,6 +17,8 @@ struct CredentialsView: View, HorizontalSizeClassOverride {
     @State var url: String
     @State var apiSecret: String
     
+    var allowCancel: Bool
+    
     var body: some View {
         VStack {
             Text("Nightscout Login")
@@ -52,8 +54,10 @@ struct CredentialsView: View, HorizontalSizeClassOverride {
             .buttonStyle(ActionButtonStyle(.primary))
             .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
             
-            Button(action: { self.viewModel.didCancel?() } ) {
-                Text("Cancel").padding(.top, 20)
+            if allowCancel {
+                Button(action: { self.viewModel.didCancel?() } ) {
+                    Text("Cancel").padding(.top, 20)
+                }
             }
         }
         .padding([.leading, .trailing])
@@ -65,7 +69,7 @@ struct CredentialsView: View, HorizontalSizeClassOverride {
 
 struct CredentialsView_Previews: PreviewProvider {
     static var previews: some View {
-        CredentialsView(viewModel: CredentialsViewModel(service: NightscoutService()), url: "", apiSecret: "")
+        CredentialsView(viewModel: CredentialsViewModel(service: NightscoutService()), url: "", apiSecret: "", allowCancel: true)
         .environment(\.colorScheme, .dark)
     }
 }
