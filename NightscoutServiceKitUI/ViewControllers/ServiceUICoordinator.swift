@@ -45,7 +45,7 @@ enum ServiceScreen {
         case .setupChooser:
             return nil
         case .login:
-            return .suspendThresholdInfo
+            return nil
         case .status:
             return nil
         case .suspendThresholdInfo:
@@ -182,7 +182,11 @@ class ServiceUICoordinator: UINavigationController, CompletionNotifying, UINavig
                     self.notifyServiceCreated(self.service!)
                     self.serviceSetupDelegate?.serviceSetupNotifying(self, didCreateService: self.service!)
                 }
-                self.stepFinished()
+                if self.initialTherapySettings.isComplete {
+                    self.stepFinished()
+                } else {
+                    self.navigate(to: .suspendThresholdInfo)
+                }
             }
             let view = CredentialsView(viewModel: model, url: service!.siteURL?.absoluteString ?? "", apiSecret: service!.apiSecret ?? "", allowCancel: self.viewControllers.count == 0)
             let hostedView = hostingController(rootView: view)

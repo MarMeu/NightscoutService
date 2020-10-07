@@ -62,6 +62,7 @@ struct CredentialsView: View, HorizontalSizeClassOverride {
         }
         .padding([.leading, .trailing])
         .offset(y: -keyboardObserver.height*0.4)
+        .navigationBarHidden(allowCancel)
         .navigationBarTitle("")
     }
 }
